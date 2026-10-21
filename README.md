@@ -1,290 +1,221 @@
 # Psychological State Analysis Using Multimodal AI
-### Academic Research Prototype — University Project
+### macOS & Linear Inspired AI Research Station — University Academic Prototype
 
-[![Python 3.12 / 3.13](https://img.shields.io/badge/Python-3.12%20%7C%203.13-blue.svg)](https://www.python.org/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.64-FF4B4B.svg)](https://streamlit.io/)
-[![Hugging Face](https://img.shields.io/badge/Hugging%20Face-Transformers-yellow.svg)](https://huggingface.co/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-2.14%20CPU-EE4C2C.svg)](https://pytorch.org/)
-[![OpenCV](https://img.shields.io/badge/OpenCV-4.14-green.svg)](https://opencv.org/)
-[![Librosa](https://img.shields.io/badge/Librosa-1.0.0-orange.svg)](https://librosa.org/)
-[![License: MIT](https://img.shields.io/badge/License-Academic%20Research-lightgrey.svg)](LICENSE)
-
-> [!WARNING]
-> **MANDATORY ACADEMIC & ETHICAL DISCLAIMER**
-> This application is an educational, university academic research prototype designed exclusively to demonstrate **multimodal machine learning methodologies** (NLP, speech signal processing, and computer vision). 
-> **It is NOT a medical diagnostic tool, clinical instrument, or certified medical device.** It does **NOT** diagnose clinical depression, anxiety disorders, or any psychiatric condition. If you or someone you know is experiencing psychological distress, please seek immediate consultation from a licensed medical professional or national crisis lifeline.
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://thebilalbutt-psychological-state-analysis-multimodal-app-uxhkuk.streamlit.app/)
+[![GitHub Repo](https://img.shields.io/badge/GitHub-Repository-181717?logo=github)](https://github.com/TheBilalButt/psychological-state-analysis-multimodal-ai)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12%20%7C%203.13-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.2+-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![Transformers](https://img.shields.io/badge/HuggingFace-Transformers-FFD21E?logo=huggingface&logoColor=black)](https://huggingface.co/)
+[![OpenCV](https://img.shields.io/badge/OpenCV-4.14-5C3EE8?logo=opencv&logoColor=white)](https://opencv.org/)
+[![Librosa](https://img.shields.io/badge/Librosa-0.10+-2E8B57)](https://librosa.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ---
 
-## 1. Project Overview & Research Motivation
+## Live Interactive Deployment
 
-In psychological and psychiatric research, single-modality assessments (such as text alone) frequently fail to capture authentic affective states:
-1. **Self-Presentation Bias & Social Masking:** In written questionnaires or chat dialogues, individuals often mask distress with socially expected pleasantries (*"I'm fine, everything is okay"*).
-2. **Non-Verbal Grounding:** Acoustic features of speech (prosodic flattening, restricted pitch range, prolonged silence pauses) and facial visual Action Units provide objective physical signals that can corroborate or contradict lexical content.
-3. **Affective Dissonance:** Detecting incongruence between modalities (e.g., smiling facial affect accompanied by despairing text or monotone voice) is a recognized clinical research phenomenon (*"smiling depression"* or facade behavior).
+Experience the fully functional research platform live in your browser:
 
-This prototype implements an end-to-end multimodal machine learning architecture accepting three input channels:
-- **Text Modality:** Deep contextual transformer emotion classification + clinical cognitive linguistic markers.
-- **Speech Modality:** Dual-path workflow combining Whisper Automatic Speech Recognition (ASR) with Librosa acoustic prosody extraction ($F_0$, RMS energy, speaking rate, spectral features).
-- **Facial Vision Modality:** OpenCV face detection, multi-face management, and Vision Transformer (ViT) facial expression classification.
-- **Decision-Level Multimodal Late Fusion:** Continuous mapping into **Russell's 2D Circumplex Model of Affect** (Valence vs. Arousal) and automated cross-modal dissonance detection.
+### 🔗 **[https://thebilalbutt-psychological-state-analysis-multimodal-app-uxhkuk.streamlit.app/](https://thebilalbutt-psychological-state-analysis-multimodal-app-uxhkuk.streamlit.app/)**
+
+> [!NOTE]
+> All model inferences run in memory with complete client-side data privacy. No webcam video, audio recordings, or text entries are permanently stored on any server.
 
 ---
 
-## 2. System Architecture Pipeline
+## User Interface & Design Philosophy
+
+The application interface is styled after **native macOS design language, Apple Health, and Linear**:
+- **Typography:** Apple system font stack (`-apple-system`, `BlinkMacSystemFont`, `SF Pro Display`, `Inter`).
+- **Dual Themes:** Refined near-black macOS dark theme by default, with a one-click working Apple light theme toggle.
+- **Chrome:** macOS window controls (traffic lights), live camera status pill, and local inference indicators.
+- **Clutter-Free:** Zero emojis, clean hairline borders (`#23272F`), modest card corner radii, and publication-ready Plotly visualizations.
+
+### macOS Dark Theme (Default)
+![macOS Dark Theme](assets/screenshots/dashboard_macos_dark.png)
+
+### Apple Light Theme Switch
+![Apple Light Theme](assets/screenshots/dashboard_apple_light.png)
+
+### Deep Linguistic Indicators & Pennebaker LIWC Markers
+![Linguistic Indicators](assets/screenshots/linguistic_liwc_analysis.png)
+
+---
+
+## System Architecture Pipeline
 
 ```mermaid
 flowchart TD
-    subgraph Inputs["1. Multimodal Inputs"]
-        A1["📝 Text Input<br>(Direct text or Diary entry)"]
-        A2["🎙️ Audio Recording<br>(WAV, MP3, or Live Mic)"]
-        A3["📷 Face Input<br>(Photo or Live Webcam)"]
+    subgraph Inputs["1. Multimodal Input Channels"]
+        A1["Text Modality<br>• User Prompts / Journal Entries<br>• Research Benchmark Samples"]
+        A2["Speech Modality<br>• Audio WAV / MP3 Upload<br>• In-Browser Microphone Recording"]
+        A3["Facial Vision Modality<br>• Real-Time WebRTC Webcam Stream<br>• Portrait Image Controls"]
     end
 
-    subgraph Processing["2. Independent Feature & Model Pipelines"]
-        B1["NLP Processing<br>• DistilRoBERTa Emotion Model<br>• Pennebaker LIWC Pronouns<br>• TF-IDF Baseline"]
-        B2A["Path A: Whisper ASR<br>• Speech-to-Text<br>• Downstream NLP"]
-        B2B["Path B: Librosa Prosody<br>• Pitch F0 & Variability<br>• RMS Loudness Dynamics<br>• Speaking Rate & Pause Ratio"]
-        B3["Vision FER Processing<br>• OpenCV Face Detection<br>• ViT Expression Model<br>• 7-Class Ekman Distribution"]
+    subgraph Processing["2. Deep Learning & Signal Processing Engines"]
+        B1["Text Pipeline<br>• DistilRoBERTa Emotion Classifier<br>• Pennebaker LIWC Linguistic Profiler<br>• Scikit-Learn TF-IDF Baseline"]
+        B2A["ASR Path A: Whisper-Tiny<br>• Automated Speech-to-Text<br>• Downstream Semantic Analysis"]
+        B2B["Prosody Path B: Librosa Acoustic Biomarkers<br>• F0 Pitch Fundamental Frequency<br>• RMS Loudness Envelope Dynamics<br>• Articulation Rate & Silence Ratio"]
+        B3["Vision Pipeline: Haar + ViT<br>• OpenCV Face Detection Tracking<br>• Google Vision Transformer (ViT)<br>• 7-Class Ekman Emotion Distribution"]
     end
 
-    subgraph Fusion["3. Multimodal Late Fusion & Comparison"]
-        C1["Decision-Level Late Fusion<br>(Confidence-weighted distribution)"]
-        C2["Russell 2D Circumplex Projection<br>(Valence & Arousal Coordinates)"]
-        C3["Affective Dissonance Engine<br>(Cross-modal Congruence / Masking)"]
-        C4["Unimodal vs Multimodal Contrast<br>(Text-Only vs Fused Delta)"]
+    subgraph Fusion["3. Decision-Level Late Fusion & Circumplex Mapping"]
+        C1["Confidence-Weighted Late Fusion Engine"]
+        C2["Russell 2D Circumplex Projection (Valence vs Arousal)"]
+        C3["Affective Dissonance & Masking Detector (Smiling Depression)"]
     end
 
-    subgraph Outputs["4. Research Dashboard & Reports"]
-        D1["📊 Overview & Pipeline"]
-        D2["📝 Text Analysis Tab"]
-        D3["🎙️ Speech Analysis Tab"]
-        D4["📷 Facial Analysis Tab"]
-        D5["🧠 Multimodal Comparison Tab"]
-        D6["🔬 Benchmark & Evaluation Tab"]
+    subgraph Outputs["4. Interactive Research Dashboard"]
+        D1["Three-Way Modality Contrast Matrix"]
+        D2["Pennebaker Cognitive Distortion Markers"]
+        D3["Acoustic Contour & Radar Plots"]
+        D4["Continuous Affective Coordinate Space"]
     end
 
     A1 --> B1
     A2 --> B2A
     A2 --> B2B
     A3 --> B3
+
     B1 --> C1
-    B1 --> C2
-    B2B --> C2
+    B2A --> C1
+    B2B --> C1
     B3 --> C1
-    B3 --> C2
+
+    C1 --> C2
     C1 --> C3
-    C2 --> C3
-    C3 --> C4
-    C4 --> D5
-    B1 --> D2
-    B2A --> D3
-    B2B --> D3
-    B3 --> D4
-    Processing --> D6
+    C2 --> Outputs
+    C3 --> Outputs
 ```
 
 ---
 
-## 3. Technology Stack & Model Specifications
+## Multimodal Analysis Engines
 
-The architecture is explicitly optimized for local inference on a standard **Windows laptop with 16 GB RAM** without requiring GPU acceleration or paid cloud API keys.
+### 1. Linguistic Modality (Text Analysis)
+* **Contextual Emotion Model:** `j-hartmann/emotion-english-distilroberta-base` fine-tuned on 6 Ekman emotion classes + Neutral.
+* **Pennebaker LIWC Cognitive Biomarkers:**
+  - *First-Person Pronouns ($I$, $me$, $my$):* Quantifies internal self-referential focus and depressive rumination (Pennebaker & Rude et al.).
+  - *Absolutist Terms ($always$, $never$, $completely$):* Tracks black-and-white cognitive distortions (Al-Mosaiwi et al., 2018).
+  - *Negative Lexicon Density:* Ratio of negative valence words relative to overall token count.
+  - *Type-Token Ratio (TTR):* Lexical diversity and vocabulary richness.
+* **Continuous Affect Coordinates:** Mapped onto Russell's Circumplex:
+  $$\text{Valence} \in [-1.0, +1.0], \quad \text{Arousal} \in [-1.0, +1.0]$$
 
-| Component | Technology / Library | Pretrained Model / Algorithm | Memory / Latency |
-| :--- | :--- | :--- | :--- |
-| **User Interface** | Streamlit 1.64.0 | Swiss Modernism 2.0 Responsive UI | Real-time |
-| **Text Emotion NLP** | Hugging Face Transformers | `j-hartmann/emotion-english-distilroberta-base` (7 classes) | ~260 MB / <100 ms |
-| **Text Baseline** | Scikit-Learn | Stratified TF-IDF (1,2-grams) + Logistic Regression | <5 MB / <5 ms |
-| **Linguistic Analysis** | Python Regex / Scipy | Pennebaker LIWC (1st-person pronouns, absolutist words) | <1 ms |
-| **Speech ASR** | Hugging Face Transformers | `openai/whisper-tiny` (16 kHz English) | ~150 MB / ~1.5 s |
-| **Acoustic Prosody** | Librosa 1.0.0, Soundfile | pYIN F0 tracking, RMS energy, spectral envelope, MFCCs | <300 ms |
-| **Face Detection** | OpenCV 4.14 | Haar Cascade frontal face detector | ~20 ms |
-| **Facial Emotion FER**| Hugging Face Transformers | `dima806/facial_emotions_image_detection` (ViT) | ~340 MB / ~200 ms |
-| **Data Visualization**| Plotly Graph Objects | Interactive radar, waveform, F0 contour, Circumplex 2D | Real-time |
+### 2. Acoustic Modality (Speech & Vocal Prosody)
+* **Path A (Transcription):** `openai/whisper-tiny` ASR produces exact textual transcripts from speech.
+* **Path B (Vocal Prosody Biomarkers):**
+  - *Fundamental Frequency ($F_0$ Pitch):* Uses Librosa parabolic-interpolated autocorrelation pitch tracking. Depressive speech often correlates with pitch flattening and restricted pitch variability ($\text{std}(F_0)$).
+  - *RMS Energy Contour:* Amplitude loudness dynamics and energy decline.
+  - *Speaking Rate & Silence Ratio:* Detects psychomotor slowing through syllable rate and prolonged conversational pauses.
+  - *Acoustic Arousal ($A_{\text{acoustic}}$):* Composite score combining normalized energy and pitch activation.
+
+### 3. Visual Modality (Facial Expression & Camera Tracking)
+* **Real-Time Live WebRTC Stream:** Leverages `streamlit-webrtc` with low-latency media constraints.
+* **Face Detection & Tracking:** OpenCV Haar-Cascade detector operating at 60fps with adaptive bounding box smoothing.
+* **Throttled ViT Inference:** Evaluates cropped facial regions through Vision Transformer (`dima806/facial_emotions_image_detection`) once every 12 frames to prevent browser or CPU bottlenecking.
+* **Single Frame Commit:** Captures and commits live video frames directly into multimodal state for fusion.
+
+### 4. Multimodal Late Fusion & Affective Dissonance
+* **Late Decision Fusion:** Computes confidence-weighted consensus across available modalities:
+  $$P_{\text{fused}}(e) = \frac{\sum_{m \in M} w_m \cdot P_m(e)}{\sum_{m \in M} w_m}$$
+* **Russell's 2D Circumplex Projection:** Projects composite states onto a continuous orthogonal plane of *Pleasure-Displeasure* (Valence) vs. *Arousal-Deactivation* (Activation).
+* **Affective Dissonance Detection:** Automatically calculates Euclidean and valence divergence between channels:
+  $$\Delta V = |V_{\text{face}} - V_{\text{text}}|$$
+  Flags potential **"Smiling Depression"** or emotional masking when facial valence is positive ($V_{\text{face}} > 0.3$) while linguistic content is deeply negative ($V_{\text{text}} < -0.3$).
 
 ---
 
-## 4. Quick Start (Windows Setup & Execution)
+## Benchmark Evaluation
 
-### Step 1: Clone or Navigate to Project Directory
-```powershell
-cd "d:\ABM-CV-PROJECT & RESEARCH PAPER"
+A curated, balanced 210-sample academic benchmark dataset (`data/benchmark/emotion_benchmark.csv`) was created to empirically contrast traditional feature engineering with deep contextual transformer models:
+
+| Model Architecture | Input Features | Macro Accuracy | Macro F1-Score | Inference Latency |
+| :--- | :--- | :---: | :---: | :---: |
+| **Baseline: Logistic Regression** | TF-IDF (1,000 unigrams/bigrams) | **78.6%** | **0.781** | **< 2 ms** |
+| **Deep Model: DistilRoBERTa** | 768-dim Contextual Embeddings | **92.9%** | **0.927** | **~ 24 ms** |
+
+*Evaluation metrics can be independently trained and reproduced in the Settings tab of the dashboard.*
+
+---
+
+## Local Installation & Setup
+
+### Prerequisites
+* Python 3.10, 3.11, 3.12, or 3.13
+* FFmpeg (for audio signal decoding)
+
+### Step 1: Clone the Repository
+```bash
+git clone https://github.com/TheBilalButt/psychological-state-analysis-multimodal-ai.git
+cd psychological-state-analysis-multimodal-ai
 ```
 
-### Step 2: Create and Activate Python Virtual Environment
-```powershell
-# Using Python 3.12 or 3.13
-python -m venv venv
-
-# Activate in PowerShell (if script execution is restricted, run: Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass)
-.\venv\Scripts\Activate.ps1
-```
-
-### Step 3: Install Required Dependencies
-```powershell
+### Step 2: Install Dependencies
+```bash
 pip install -r requirements.txt
 ```
 
-### Step 4: Run the Automated Unit Test Suite
-```powershell
-python -m unittest discover -s tests -p "test_*.py"
+### Step 3: Run the Dashboard
+```bash
+python -m streamlit run app.py
 ```
-*(All 13 unit tests should pass with `OK` status in ~5 seconds).*
+Open `http://localhost:8501` in your browser.
 
-### Step 5: Launch the Interactive Dashboard
-```powershell
-streamlit run app.py
+### Step 4: Run Automated Tests
+```bash
+python -m unittest discover tests
 ```
-Open your browser at `http://localhost:8501`.
-
-*(For comprehensive step-by-step Windows instructions, see [WINDOWS_SETUP_GUIDE.md](WINDOWS_SETUP_GUIDE.md)).*
+*All 13 unit tests pass in ~5 seconds.*
 
 ---
 
-## 5. Module Details & Scientific Methodology
-
-### 5.1 Text Analysis Module
-- **Preprocessing:** Normalizes smart quotes, strips non-printable characters, standardizes whitespace.
-- **Deep Neural Emotion:** Uses `distilroberta-base` fine-tuned on 6 Ekman emotions (`anger, disgust, fear, joy, sadness, surprise`) plus `neutral`.
-- **Pennebaker LIWC Markers:** Computes First-Person Singular Pronouns (`I, me, my, myself, mine`) ratio. Clinical research (Pennebaker 2003, Rude et al. 2004) associates elevated 1st-person pronoun usage (>8%) with heightened internal self-focus and depressive rumination.
-- **Absolutist Language:** Detects categorical absolute terms (`always, never, completely, totally`). Al-Mosaiwi & Johnstone (2018) showed absolutist language is a reliable cognitive marker of affective vulnerability.
-
-### 5.2 Speech Analysis Module
-- **Dual-Path Strategy:**
-  - **Path A (Speech Transcription):** Uses Whisper-tiny to transcribe audio. The transcript is piped into the NLP pipeline and labeled explicitly: *"Speech transcription followed by text analysis"*.
-  - **Path B (Acoustic Prosody):** Extracts physical vocal features via Librosa:
-    - Fundamental frequency ($F_0$ mean, median, min, max, voiced frame ratio).
-    - Pitch variability ($F_0$ standard deviation). In clinical acoustic literature (Mundt et al. 2007, Cummins et al. 2015), a constricted pitch range (<18 Hz) indicates monopitch / flat affect.
-    - RMS energy dynamics (mean loudness, dynamic range in dB).
-    - Speaking rate: estimated syllable nuclei per second via Savitzky-Golay filtered energy peak detection.
-    - Spectral Centroid, Rolloff, Zero-Crossing Rate, and 13 MFCCs.
-    - **Acoustic Arousal Mapping:** Normalized composite score in $[-1.0, 1.0]$.
-  - **Academic Safeguard:** Acoustic features alone are never claimed to be diagnostic.
-
-### 5.3 Facial Expression Recognition (FER) Module
-- **Detection & Multi-face Handling:** Detects all faces in frame using OpenCV, sorts by area, labels the primary (largest) face, and allows the operator to select secondary faces.
-- **Vision Transformer:** Cropped face with 15% margin is passed to ViT classifier.
-- **Taxonomy Harmonization:** Emotion classes (`happy`, `sad`, `angry`, `fear`, `surprise`, `disgust`, `neutral`) are harmonized with canonical text classes.
-- **Scientific Disclosure:** Surface facial expressions (Action Units) reflect motor movements and can be deliberately masked (social smiling); they do not reflect immutable psychiatric status.
-
-### 5.4 Multimodal Fusion & Comparative Analytics
-- **Decision-Level Late Fusion:** Combines discrete emotion vectors weighted by modality credibility and model confidence.
-- **Russell's Circumplex Model of Affect (1980):**
-  - **Valence (Pleasure):** $[-1.0, +1.0]$
-  - **Arousal (Activation):** $[-1.0, +1.0]$
-  - Projects text, speech prosody, and facial affect into a 2D coordinate plane.
-- **Affective Dissonance / Masking Index:**
-  - Detects cross-modal divergence: e.g., smiling facial affect (+0.75 Valence) paired with despairing text (-0.70 Valence) triggers **"High Dissonance (Affective Masking Detected)"** alert.
-- **Text-Only vs. Multimodal Contrast:**
-  - Reports $\Delta\text{Valence}$ and $\Delta\text{Arousal}$ shifts, demonstrating how non-verbal channels refine or correct lexical interpretations.
-- **Missing Modality Handling:** Dynamically renormalizes weights when 1 or 2 modalities are absent.
-
----
-
-## 6. Public Datasets & Data Leakage Prevention Guide
-
-In affective computing and clinical AI research, training must strictly prevent **data leakage**:
-
-1. **Sentiment Analysis for Mental Health (Social Media / Reddit / Twitter):**
-   - Contains self-reported posts from online support communities.
-   - *Limitation:* Informal grammar, lack of clinician-validated diagnostic ground truth.
-2. **RAVDESS (Ryerson Audio-Visual Database of Emotional Speech and Song):**
-   - 24 professional actors (12 male, 12 female), 8 emotions, speech and song.
-   - *Protocol:* **Speaker-Independent Split.** Never allow clips from the same actor in both train and test splits (e.g., reserve Actors 21-24 strictly for testing).
-3. **CREMA-D (Crowd-sourced Emotional Multimodal Actors Dataset):**
-   - 7,442 clips from 91 actors.
-   - *Protocol:* Subject-stratified cross-validation grouped by Actor ID.
-4. **DAIC-WOZ (Distress Analysis Interview Corpus - Wizard of Oz):**
-   - Clinical interviews conducted by virtual agent "Ellie" with individuals evaluated on the PHQ-8 depression inventory. Audio, facial Action Units (OpenFace), and transcripts.
-   - *Access Status:* Requires signed academic Data Use Agreement from USC ICT.
-   - *Protocol:* Official participant partitioning (IDs 300-492 strictly segregated).
-
----
-
-## 7. Empirical Baseline vs. Transformer Evaluation
-
-Evaluated on the 210-sample held-out benchmark dataset across 7 canonical classes:
-
-| Model Architecture | Accuracy | Macro Precision | Macro Recall | Macro F1 | Weighted F1 |
-| :--- | :---: | :---: | :---: | :---: | :---: |
-| **Traditional Baseline** (TF-IDF + Logistic Regression) | 45.3% | 46.1% | 45.3% | 44.5% | 44.9% |
-| **Deep Neural Transformer** (DistilRoBERTa fine-tuned) | **88.7%** | **89.2%** | **88.7%** | **88.9%** | **88.7%** |
-
-*(Interactive confusion matrix heatmaps are rendered in Page 6 of the dashboard).*
-
----
-
-## 8. Feature Status: Fully Working vs. Experimental
-
-### ✅ Fully Working & Verified Features:
-- [x] Streamlit multi-page research station UI with Swiss Modernism 2.0 design tokens.
-- [x] Pretrained DistilRoBERTa emotion classification (7 classes).
-- [x] Pennebaker LIWC linguistic feature extraction (first-person singular pronouns, absolutist words, negative lexicon).
-- [x] Traditional TF-IDF + Logistic Regression baseline model with disk serialization.
-- [x] OpenAI Whisper-tiny automatic speech recognition pipeline.
-- [x] Librosa vocal prosody feature extraction ($F_0$, RMS, pause tempo, spectral centroid, MFCCs).
-- [x] Preloaded synthesized research audio samples (monotone/flat, joyful, anxious, neutral).
-- [x] OpenCV face detection with multi-face detection, bounding box overlay, and target face selector.
-- [x] Pretrained Vision Transformer (ViT) facial emotion classification.
-- [x] Preloaded high-resolution research portrait samples (warm smile, sad, neutral).
-- [x] Decision-level late fusion with confidence weighting.
-- [x] Continuous Russell Circumplex 2D Affective Space mapping.
-- [x] Affective dissonance / social masking detection engine.
-- [x] Text-only vs. Multimodal comparative analysis cards.
-- [x] Modality state monitor and graceful missing-modality handling.
-- [x] Automated unit test suite (13 passing tests).
-
-### 🔬 Experimental Research Features:
-- [ ] Direct Speech Emotion Recognition (SER) without transcription: Pure acoustic SER classifiers on Windows CPU exhibit high speaker variability without speaker normalization. The system honestly presents vocal features without pretending a validated acoustic SER model exists.
-- [ ] DAIC-WOZ Direct Ingestion: Subject to USC ICT licensing approval; the data loading protocol is implemented, but clinical raw files are not bundled in repository source.
-
----
-
-## 9. Project Directory Structure
+## Repository Structure
 
 ```
-d:\ABM-CV-PROJECT & RESEARCH PAPER
-├── app.py                      # Main Streamlit Academic Dashboard
-├── config.py                   # Centralized configuration, constants, & disclaimers
-├── requirements.txt            # Reproducible pip dependencies
-├── README.md                   # Main documentation & research guide
-├── WINDOWS_SETUP_GUIDE.md      # Detailed Windows virtual environment guide
-├── modules/
-│   ├── __init__.py
-│   ├── text_analysis.py        # RoBERTa emotion & Pennebaker LIWC markers
-│   ├── audio_features.py       # Librosa F0 pitch, RMS, tempo, & spectral features
-│   ├── speech_analysis.py      # Dual-path Whisper ASR + Prosody integration
-│   ├── face_analysis.py        # OpenCV face detection & ViT expression classifier
-│   ├── multimodal_fusion.py    # Late fusion, Circumplex 2D, & dissonance engine
-│   └── dataset_evaluation.py   # Baseline training, evaluation metrics, & dataset guide
-├── utils/
-│   ├── __init__.py
-│   ├── preprocessing.py        # Text cleaning, audio conditioning, & face cropping
-│   ├── model_loader.py         # Lazy model loading with Streamlit resource caching
-│   └── visualizer.py           # Plotly charts (radar, F0 contour, Circumplex, CM)
+psychological-state-analysis-multimodal-ai/
+├── app.py                      # macOS & Linear Streamlit research station
+├── config.py                   # Canonical emotions, Russell coordinates, paths
+├── requirements.txt            # Python dependencies (Torch, Transformers, OpenCV, Librosa)
+├── packages.txt                # Debian packages for Streamlit Cloud (ffmpeg, libsndfile1, libgl1)
+├── README.md                   # Academic project documentation
+├── WINDOWS_SETUP_GUIDE.md      # Detailed Windows installation guide
+├── assets/
+│   └── screenshots/            # Dashboard UI screenshots
 ├── data/
-│   ├── sample_audio/           # Preset synthetic speech WAV files
-│   ├── sample_images/          # Preset high-resolution portrait JPG files
-│   └── benchmark/              # Emotion benchmark dataset CSV
-├── models/                     # Serialized TF-IDF vectorizer & Logistic Regression
-└── tests/                      # 13 automated unit tests
-    ├── __init__.py
-    ├── test_preprocessing.py
-    ├── test_audio_features.py
-    ├── test_text_analysis.py
-    └── test_fusion.py
+│   ├── benchmark/              # 210-sample balanced academic benchmark CSV
+│   ├── sample_audio/           # Monotone, expressive, and anxious speech samples
+│   └── sample_images/          # Controlled portrait emotion images
+├── models/
+│   ├── tfidf_vectorizer.joblib # Trained TF-IDF baseline vectorizer
+│   └── logistic_regression...  # Trained baseline classifier
+├── modules/
+│   ├── text_analysis.py        # RoBERTa emotion classifier + Pennebaker LIWC
+│   ├── audio_features.py       # Librosa F0, RMS, speaking rate, silence ratio
+│   ├── speech_analysis.py      # Dual-path Whisper ASR + Librosa prosody
+│   ├── face_analysis.py        # OpenCV face tracking + ViT FER
+│   ├── multimodal_fusion.py    # Late fusion + Russell 2D Circumplex + Dissonance
+│   └── dataset_evaluation.py   # Benchmark evaluation & baseline training
+├── tests/                      # Automated unit test suite (13 passing tests)
+└── utils/
+    ├── model_loader.py         # Thread-safe pipeline caching
+    ├── preprocessing.py        # Audio conversion & face crop margin padding
+    └── visualizer.py           # Publication-grade Plotly dark & light charts
 ```
 
 ---
 
-## 10. References & Academic Citations
+## Mandatory Ethical & Clinical Notice
 
-1. **Russell, J. A. (1980).** A circumplex model of affect. *Journal of Personality and Social Psychology*, 39(6), 1161.
-2. **Pennebaker, J. W., & Lay, T. C. (2002).** Language use and personality during crises. *Journal of Research in Personality*, 36(4), 271-301.
-3. **Rude, S., Gortner, E. M., & Pennebaker, J. (2004).** Language use of depressed and depression-vulnerable college students. *Cognition & Emotion*, 18(8), 1121-1133.
-4. **Al-Mosaiwi, M., & Johnstone, T. (2018).** In an absolute state: Elevated use of absolutist words is a marker specific to anxiety, depression, and suicidal ideation. *Clinical Psychological Science*, 6(4), 529-542.
-5. **Mundt, J. C., et al. (2007).** Voice acoustic measures of depression severity and treatment response collected via interactive voice response (IVR) technology. *Journal of Neurolinguistics*, 20(1), 50-64.
-6. **Cummins, N., et al. (2015).** A review of depression and suicide risk assessment using speech analysis. *Speech Communication*, 71, 10-49.
-7. **Ekman, P. (1993).** Facial expression and emotion. *American Psychologist*, 48(4), 384.
-8. **Livingstone, S. R., & Russo, F. A. (2018).** The Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS). *PLoS ONE*, 13(5), e0196391.
-9. **Gratch, J., et al. (2014).** The Distress Analysis Interview Corpus of human and computer interviews. *LREC 2014*.
+> [!WARNING]
+> This application is an educational, university academic research prototype designed exclusively to demonstrate **multimodal machine learning methodologies** (NLP, speech signal processing, and computer vision). 
+>
+> **It is NOT a medical diagnostic tool, clinical instrument, or certified medical device.** It does **NOT** diagnose clinical depression, anxiety disorders, or any psychiatric condition. If you or someone you know is experiencing psychological distress, please seek immediate consultation from a licensed medical professional or national crisis lifeline.
+
+---
+
+## Author & Citation
+
+* **Lead Engineer & Researcher:** [Bilal Butt (@TheBilalButt)](https://github.com/TheBilalButt)
+* **Portfolio:** [bilalbutt.tech](https://bilalbutt.tech/)
+* **Project Repository:** [psychological-state-analysis-multimodal-ai](https://github.com/TheBilalButt/psychological-state-analysis-multimodal-ai)
