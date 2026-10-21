@@ -763,24 +763,31 @@ elif st.session_state.page == "Text Analysis":
     st.markdown("<h2 style='font-size:22px; font-weight:700; margin:0 0 4px 0;'>Text Analysis</h2>", unsafe_allow_html=True)
     st.markdown("<p style='font-size:13px; color:var(--text-secondary); margin:0 0 16px 0;'>Transformer emotion classification and Pennebaker LIWC cognitive linguistic markers.</p>", unsafe_allow_html=True)
 
+    if "txt_input_area" not in st.session_state:
+        st.session_state.txt_input_area = st.session_state.input_text_val
+
     # Preset quick-fill buttons
     preset_cols = st.columns(4)
     if preset_cols[0].button("Depressed Sample", use_container_width=True):
-        st.session_state.input_text_val = "I feel completely exhausted, hopeless, and empty inside. Everything I try to do feels like a heavy burden."
+        st.session_state.txt_input_area = "I feel completely exhausted, hopeless, and empty inside. Everything I try to do feels like a heavy burden."
+        st.session_state.input_text_val = st.session_state.txt_input_area
         st.rerun()
     if preset_cols[1].button("Anxiety Sample", use_container_width=True):
-        st.session_state.input_text_val = "My heart is pounding and I cannot catch my breath. I am terrified that something catastrophic is going to happen."
+        st.session_state.txt_input_area = "My heart is pounding and I cannot catch my breath. I am terrified that something catastrophic is going to happen."
+        st.session_state.input_text_val = st.session_state.txt_input_area
         st.rerun()
     if preset_cols[2].button("Joyful Sample", use_container_width=True):
-        st.session_state.input_text_val = "I am so excited and genuinely grateful today! Our team's paper was accepted at the conference."
+        st.session_state.txt_input_area = "I am so excited and genuinely grateful today! Our team's paper was accepted at the conference."
+        st.session_state.input_text_val = st.session_state.txt_input_area
         st.rerun()
     if preset_cols[3].button("Masked Sample", use_container_width=True):
-        st.session_state.input_text_val = "I always tell everyone that everything is fine and totally normal, but inside I feel completely isolated."
+        st.session_state.txt_input_area = "I always tell everyone that everything is fine and totally normal, but inside I feel completely isolated."
+        st.session_state.input_text_val = st.session_state.txt_input_area
         st.rerun()
 
     user_text = st.text_area(
         "Enter text to analyze",
-        value=st.session_state.input_text_val,
+        key="txt_input_area",
         height=110,
         placeholder="Enter text to analyze",
         label_visibility="collapsed"
