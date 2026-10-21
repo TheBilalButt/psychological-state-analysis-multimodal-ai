@@ -40,6 +40,9 @@ The application interface is styled after **native macOS design language, Apple 
 ### Deep Linguistic Indicators & Pennebaker LIWC Markers
 ![Linguistic Indicators](assets/screenshots/linguistic_liwc_analysis.png)
 
+### Real-Time Facial Recognition & Action Unit Bounding Boxes
+![Facial Recognition & Bounding Boxes](assets/screenshots/facial_recognition_bounding_boxes.png)
+
 ---
 
 ## System Architecture Pipeline
@@ -111,10 +114,19 @@ flowchart TD
   - *Acoustic Arousal ($A_{\text{acoustic}}$):* Composite score combining normalized energy and pitch activation.
 
 ### 3. Visual Modality (Facial Expression & Camera Tracking)
-* **Real-Time Live WebRTC Stream:** Leverages `streamlit-webrtc` with low-latency media constraints.
-* **Face Detection & Tracking:** OpenCV Haar-Cascade detector operating at 60fps with adaptive bounding box smoothing.
-* **Throttled ViT Inference:** Evaluates cropped facial regions through Vision Transformer (`dima806/facial_emotions_image_detection`) once every 12 frames to prevent browser or CPU bottlenecking.
-* **Single Frame Commit:** Captures and commits live video frames directly into multimodal state for fusion.
+
+![Live Camera & Vision FER](assets/screenshots/facial_analysis_camera.png)
+
+* **Real-Time Live WebRTC Stream:** Leverages `streamlit-webrtc` with low-latency media constraints (`video=True, audio=False`).
+* **Haar-Cascade Face Tracking & Bounding Boxes:** 
+  - Dynamic OpenCV face tracking runs at 60fps with adaptive bounding box margin expansion ($+15\%$ padding) to preserve chin and forehead Action Units.
+  - Multi-face spatial sorting automatically identifies and tracks `Face #1 [Primary]` based on bounding box pixel area ($w \times h$).
+  - Corner HUD brackets and pill badges display real-time expression classifications directly above the target face:
+    - **Emerald Green Bounding Box:** Positive Affect (Joy / Contentment)
+    - **Apple Blue Bounding Box:** Negative Depressive Affect (Sadness / Melancholy)
+    - **Violet Bounding Box:** High-Arousal Incongruence (Fear / Anxiety / Surprise)
+* **Throttled Vision Transformer (ViT) Inference:** Cropped facial regions are evaluated by Google ViT (`dima806/facial_emotions_image_detection`) once every 12 frames (~2.5 inferences/second) to ensure 60fps rendering without CPU bottlenecking.
+* **Single-Click Frame Commit:** "Capture & Commit Frame" freezes the active camera frame and injects its predicted Action Unit distribution directly into the late fusion engine.
 
 ### 4. Multimodal Late Fusion & Affective Dissonance
 * **Late Decision Fusion:** Computes confidence-weighted consensus across available modalities:
