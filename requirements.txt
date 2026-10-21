@@ -1,0 +1,19 @@
+# Multimodal Psychological State Analysis - Academic Research Prototype
+# Core Machine Learning, Audio, Vision, and Dashboard Dependencies
+
+streamlit>=1.35.0,<=1.65.0
+torch>=2.2.0
+torchvision>=0.17.0
+transformers>=4.40.0
+opencv-python>=4.8.0,<5.0.0
+librosa>=0.10.0
+soundfile>=0.12.0
+scikit-learn>=1.4.0
+scipy>=1.12.0
+pandas>=2.0.0
+numpy>=1.24.0
+plotly>=5.20.0
+pillow>=10.0.0
+joblib>=1.3.0
+tqdm>=4.66.0
+huggingface-hub>=0.23.0
